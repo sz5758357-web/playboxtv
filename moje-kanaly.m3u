@@ -1,7 +1,0 @@
-#EXTM3U
-#EXTINF:-1,TVP 1
-https://stream.tvp.pl/player/embed/1?video_id=1
-#EXTINF:-1,TW N
-https://tvn24.pl/stream/tvn24/index.m3u8
-#EXTINF:-1,Polsat
-http://polsat.polskatv.online/stream/1.m3u8
