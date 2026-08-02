@@ -17,7 +17,6 @@
         }
         .container { max-width: 1200px; margin: 0 auto; }
         
-        /* === HEADER === */
         .header {
             background: linear-gradient(135deg, #1A1A3E, #2A1A4E);
             padding: 16px 20px;
@@ -74,7 +73,6 @@
         }
         .header .secondary-btn:hover { background: #3A2A5E; }
 
-        /* === STATUS === */
         .status {
             padding: 10px 16px;
             background: #1A1A3E;
@@ -101,14 +99,12 @@
             background: #333;
         }
 
-        /* === MAIN === */
         .main {
             display: flex;
             gap: 16px;
             flex-wrap: wrap;
         }
         
-        /* === LISTA KANAŁÓW === */
         .channels {
             flex: 1;
             min-width: 280px;
@@ -163,7 +159,6 @@
             min-width: 30px;
         }
 
-        /* === ODTWARZACZ === */
         .player {
             flex: 2;
             min-width: 320px;
@@ -210,7 +205,6 @@
             text-align: center;
         }
 
-        /* === STOPKA === */
         .footer {
             margin-top: 16px;
             padding: 12px;
@@ -224,7 +218,6 @@
             font-weight: 600;
         }
 
-        /* === LOADING === */
         .loading {
             display: flex;
             justify-content: center;
@@ -241,7 +234,6 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* === RESPONSIVE === */
         @media (max-width: 700px) {
             .header { flex-direction: column; align-items: stretch; }
             .header input { min-width: auto; }
@@ -253,7 +245,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
         <div class="header">
             <div class="logo">
                 <span class="logo-icon">📺</span>
@@ -265,15 +256,12 @@
             <button class="secondary-btn" onclick="pobierzZPliku()">📂 Plik</button>
         </div>
 
-        <!-- STATUS -->
         <div class="status" id="status">
             <span>✅ PlayBoxTV - Gotowy</span>
             <span class="live off" id="liveStatus">⏹ ZATRZYMANY</span>
         </div>
 
-        <!-- MAIN -->
         <div class="main">
-            <!-- LISTA KANAŁÓW -->
             <div class="channels" id="channelsList">
                 <input class="search" type="text" id="searchInput" placeholder="🔍 Szukaj kanału..." onkeyup="filtrujKanaly()">
                 <div id="channelList">
@@ -281,7 +269,6 @@
                 </div>
             </div>
 
-            <!-- ODTWARZACZ -->
             <div class="player">
                 <video id="videoPlayer" controls autoplay playsinline></video>
                 <div class="player-controls">
@@ -295,7 +282,6 @@
             </div>
         </div>
 
-        <!-- STOPKA -->
         <div class="footer">
             <span>PlayBoxTV</span> · Dekoder IPTV · <span id="channelCount">0</span> kanałów
         </div>
@@ -309,7 +295,6 @@
         let isPlaying = false;
         const video = document.getElementById('videoPlayer');
 
-        // === STATUS ===
         function status(tekst, live = false) {
             const el = document.getElementById('status');
             const liveEl = document.getElementById('liveStatus');
@@ -323,7 +308,6 @@
             }
         }
 
-        // === POBIERZ LISTĘ ===
         function pobierzListe() {
             const url = document.getElementById('m3uUrl').value.trim();
             if (!url) { status('❌ Wprowadź adres listy M3U!'); return; }
@@ -342,7 +326,6 @@
             .catch(err => status(`❌ Błąd: ${err.message}`));
         }
 
-        // === POBIERZ Z PLIKU ===
         function pobierzZPliku() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -361,7 +344,6 @@
             input.click();
         }
 
-        // === PARSUJ M3U ===
         function parsujM3U(zawartosc) {
             kanaly = [];
             const linie = zawartosc.split('\n');
@@ -381,7 +363,6 @@
             wyswietlKanaly();
         }
 
-        // === WYŚWIETL LISTĘ ===
         function wyswietlKanaly() {
             const container = document.getElementById('channelList');
             container.innerHTML = '';
@@ -394,7 +375,6 @@
             });
         }
 
-        // === FILTRUJ ===
         function filtrujKanaly() {
             const szukaj = document.getElementById('searchInput').value.toLowerCase();
             const items = document.querySelectorAll('.channel-item');
@@ -404,7 +384,6 @@
             });
         }
 
-        // === ODTWARZAJ ===
         function odtworzKanal(index) {
             const kanal = kanaly[index];
             if (!kanal) return;
@@ -437,7 +416,6 @@
             }
         }
 
-        // === ZATRZYMAJ ===
         function zatrzymaj() {
             if (hls) { hls.destroy(); hls = null; }
             video.pause();
@@ -449,14 +427,12 @@
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
         }
 
-        // === OTWÓRZ ZEWNĘTRZNY ===
         function otworzZewnetrzny() {
             if (!aktualnyKanal) { status('⚠️ Najpierw wybierz kanał!'); return; }
             window.open(aktualnyKanal.link, '_blank');
             status(`🔗 Otworzono: ${aktualnyKanal.nazwa}`);
         }
 
-        // === AUTO START ===
         window.onload = function() {
             setTimeout(pobierzListe, 500);
         };
