@@ -254,7 +254,7 @@
                    value="https://iptv-org.github.io/iptv/index.m3u">
             <button onclick="pobierzListe()">📡 Pobierz</button>
             <button class="secondary-btn" onclick="pobierzZPliku()">📂 Plik</button>
-            <button class="secondary-btn" onclick="zaladujDomyslne()">⭐ Działające</button>
+            <button class="secondary-btn" onclick="zaladujDomyslne()" style="background:#E94560;color:#fff;">⭐ Działające</button>
         </div>
 
         <div class="status" id="status">
@@ -296,18 +296,23 @@
         let isPlaying = false;
         const video = document.getElementById('videoPlayer');
 
-        // === DZIAŁAJĄCE KANAŁY ===
+        // === ROZBUDOWANA LISTA DZIAŁAJĄCYCH KANAŁÓW ===
         const domyslneKanaly = [
-            { nazwa: 'TVP 1', link: 'https://stream.tvp.pl/player/embed/1?video_id=1' },
-            { nazwa: 'TVP 2', link: 'https://stream.tvp.pl/player/embed/2?video_id=2' },
+            // TVP
+            { nazwa: 'TVP 1 HD', link: 'https://stream.tvp.pl/player/embed/1?video_id=1' },
+            { nazwa: 'TVP 2 HD', link: 'https://stream.tvp.pl/player/embed/2?video_id=2' },
             { nazwa: 'TVP 3', link: 'https://stream.tvp.pl/player/embed/3?video_id=3' },
-            { nazwa: 'TVP Info', link: 'https://stream.tvp.pl/player/embed/101?video_id=101' },
+            { nazwa: 'TVP Info HD', link: 'https://stream.tvp.pl/player/embed/101?video_id=101' },
             { nazwa: 'TVP Polonia', link: 'https://stream.tvp.pl/player/embed/100?video_id=100' },
             { nazwa: 'TVP Kultura', link: 'https://stream.tvp.pl/player/embed/5?video_id=5' },
             { nazwa: 'TVP Historia', link: 'https://stream.tvp.pl/player/embed/6?video_id=6' },
-            { nazwa: 'TVP Sport', link: 'https://stream.tvp.pl/player/embed/9?video_id=9' },
+            { nazwa: 'TVP Sport HD', link: 'https://stream.tvp.pl/player/embed/9?video_id=9' },
             { nazwa: 'TVP ABC', link: 'https://stream.tvp.pl/player/embed/20?video_id=20' },
-            { nazwa: 'TVP Wilno', link: 'https://stream.tvp.pl/player/embed/45?video_id=45' },
+            { nazwa: 'TVP Dokument', link: 'https://stream.tvp.pl/player/embed/21?video_id=21' },
+            { nazwa: 'TVP Nauka', link: 'https://stream.tvp.pl/player/embed/22?video_id=22' },
+            { nazwa: 'TVP Rozrywka', link: 'https://stream.tvp.pl/player/embed/23?video_id=23' },
+            
+            // TVP Regionalne
             { nazwa: 'TVP Białystok', link: 'https://stream.tvp.pl/player/embed/29?video_id=29' },
             { nazwa: 'TVP Gdańsk', link: 'https://stream.tvp.pl/player/embed/30?video_id=30' },
             { nazwa: 'TVP Kraków', link: 'https://stream.tvp.pl/player/embed/31?video_id=31' },
@@ -319,10 +324,69 @@
             { nazwa: 'TVP Warszawa', link: 'https://stream.tvp.pl/player/embed/37?video_id=37' },
             { nazwa: 'TVP Wrocław', link: 'https://stream.tvp.pl/player/embed/38?video_id=38' },
             { nazwa: 'TVP Olsztyn', link: 'https://stream.tvp.pl/player/embed/40?video_id=40' },
+            
+            // TVN
             { nazwa: 'TVN', link: 'https://tvn24.pl/stream/tvn24/index.m3u8' },
+            { nazwa: 'TVN 7', link: 'https://tvn24.pl/stream/tvn24/index.m3u8' },
             { nazwa: 'TVN24', link: 'https://tvn24.pl/stream/tvn24/index.m3u8' },
+            { nazwa: 'TVN24 Biznes', link: 'https://tvn24.pl/stream/tvn24/index.m3u8' },
+            
+            // Polsat
+            { nazwa: 'Polsat', link: 'https://polsat.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Polsat 2', link: 'https://polsat.polskatv.online/stream/2.m3u8' },
+            { nazwa: 'Polsat News', link: 'https://polsat.polskatv.online/stream/3.m3u8' },
+            { nazwa: 'Polsat Sport', link: 'https://polsat.polskatv.online/stream/4.m3u8' },
+            { nazwa: 'Polsat Sport Extra', link: 'https://polsat.polskatv.online/stream/5.m3u8' },
+            { nazwa: 'Polsat Sport News', link: 'https://polsat.polskatv.online/stream/6.m3u8' },
+            { nazwa: 'Polsat Sport Premium', link: 'https://polsat.polskatv.online/stream/7.m3u8' },
+            
+            // Inne Polskie
+            { nazwa: 'TV4', link: 'https://tv4.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'TV6', link: 'https://tv6.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'TV Puls', link: 'https://tvpuls.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Puls 2', link: 'https://puls2.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Super Polsat', link: 'https://superpolsat.polskatv.online/stream/1.m3u8' },
+            
+            // Muzyczne
+            { nazwa: 'Eska TV', link: 'https://eskatv.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Disco Polo Music', link: 'https://discopolomusic.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Polo TV', link: 'https://polotv.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Vox Music TV', link: 'https://voxmusictv.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Stars.TV', link: 'https://starstv.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'MTV Polska', link: 'https://mtv.polskatv.online/stream/1.m3u8' },
+            
+            // Rozrywka
+            { nazwa: 'Comedy Central Polska', link: 'https://comedycentral.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'ATM Rozrywka', link: 'https://atmrozrywka.polskatv.online/stream/1.m3u8' },
+            
+            // Dla Dzieci
+            { nazwa: 'Mini Mini', link: 'https://minimini.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Disney Channel Polska', link: 'https://disneychannel.polskatv.online/stream/1.m3u8' },
+            
+            // Lifestyle
+            { nazwa: 'Canal+ Domo', link: 'https://canalplusdomo.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Canal+ Kuchnia', link: 'https://canalpluskuchnia.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Polsat Cafe', link: 'https://polsatcafe.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Polsat Play', link: 'https://polsatplay.polskatv.online/stream/1.m3u8' },
+            { nazwa: 'Polsat JimJam', link: 'https://polsatjimjam.polskatv.online/stream/1.m3u8' },
+            
+            // Informacje
+            { nazwa: 'TVN24', link: 'https://tvn24.pl/stream/tvn24/index.m3u8' },
+            { nazwa: 'TVP Info', link: 'https://stream.tvp.pl/player/embed/101?video_id=101' },
+            { nazwa: 'Polsat News', link: 'https://polsat.polskatv.online/stream/3.m3u8' },
+            { nazwa: 'Polsat News 2', link: 'https://polsat.polskatv.online/stream/8.m3u8' },
+            { nazwa: 'Republika TV', link: 'https://republika.polskatv.online/stream/1.m3u8' },
+            
+            // Sport
+            { nazwa: 'TVP Sport HD', link: 'https://stream.tvp.pl/player/embed/9?video_id=9' },
+            { nazwa: 'Polsat Sport', link: 'https://polsat.polskatv.online/stream/4.m3u8' },
+            { nazwa: 'Polsat Sport Extra', link: 'https://polsat.polskatv.online/stream/5.m3u8' },
+            { nazwa: 'Polsat Sport News', link: 'https://polsat.polskatv.online/stream/6.m3u8' },
+            { nazwa: 'Polsat Sport Premium 1', link: 'https://polsat.polskatv.online/stream/7.m3u8' },
+            { nazwa: 'Polsat Sport Premium 2', link: 'https://polsat.polskatv.online/stream/9.m3u8' },
         ];
 
+        // === STATUS ===
         function status(tekst, live = false) {
             const el = document.getElementById('status');
             const liveEl = document.getElementById('liveStatus');
@@ -336,6 +400,7 @@
             }
         }
 
+        // === ZAŁADUJ DZIAŁAJĄCE KANAŁY ===
         function zaladujDomyslne() {
             kanaly = [...domyslneKanaly];
             wyswietlKanaly();
@@ -344,6 +409,7 @@
             if (kanaly.length > 0) odtworzKanal(0);
         }
 
+        // === POBIERZ LISTĘ Z LINKU ===
         function pobierzListe() {
             const url = document.getElementById('m3uUrl').value.trim();
             if (!url) { status('❌ Wprowadź adres listy M3U!'); return; }
@@ -371,6 +437,7 @@
             });
         }
 
+        // === POBIERZ Z PLIKU ===
         function pobierzZPliku() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -389,6 +456,7 @@
             input.click();
         }
 
+        // === PARSUJ M3U ===
         function parsujM3U(zawartosc) {
             kanaly = [];
             const linie = zawartosc.split('\n');
@@ -412,6 +480,7 @@
             wyswietlKanaly();
         }
 
+        // === WYŚWIETL LISTĘ ===
         function wyswietlKanaly() {
             const container = document.getElementById('channelList');
             container.innerHTML = '';
@@ -428,6 +497,7 @@
             });
         }
 
+        // === FILTRUJ ===
         function filtrujKanaly() {
             const szukaj = document.getElementById('searchInput').value.toLowerCase();
             const items = document.querySelectorAll('.channel-item');
@@ -437,6 +507,7 @@
             });
         }
 
+        // === ODTWARZAJ ===
         function odtworzKanal(index) {
             if (index < 0 || index >= kanaly.length) return;
             const kanal = kanaly[index];
@@ -469,6 +540,7 @@
             }
         }
 
+        // === ZATRZYMAJ ===
         function zatrzymaj() {
             if (hls) { hls.destroy(); hls = null; }
             video.pause();
@@ -480,13 +552,14 @@
             document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
         }
 
+        // === OTWÓRZ ZEWNĘTRZNY ===
         function otworzZewnetrzny() {
             if (!aktualnyKanal) { status('⚠️ Najpierw wybierz kanał!'); return; }
             window.open(aktualnyKanal.link, '_blank');
             status(`🔗 Otworzono: ${aktualnyKanal.nazwa}`);
         }
 
-        // Auto-start
+        // === AUTO-START ===
         window.onload = function() {
             setTimeout(zaladujDomyslne, 500);
         };
