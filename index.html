@@ -251,7 +251,7 @@
                 <span class="logo-text">PlayBoxTV</span>
             </div>
             <input type="text" id="m3uUrl" placeholder="Wklej link do listy M3U..." 
-                   value="https://raw.githubusercontent.com/iptv-org/iptv/master/streams/pl.m3u">
+                   value="https://iptv-org.github.io/iptv/index.m3u">
             <button onclick="pobierzListe()">📡 Pobierz</button>
             <button class="secondary-btn" onclick="pobierzZPliku()">📂 Plik</button>
         </div>
@@ -314,22 +314,31 @@
             status('⏳ Pobieranie listy...');
             document.getElementById('channelList').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
-            fetch(url, {
+            // Użyj proxy CORS
+            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+
+            fetch(proxyUrl, {
                 headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
             })
-            .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
+            .then(r => { 
+                if(!r.ok) throw new Error('HTTP ' + r.status); 
+                return r.text(); 
+            })
             .then(text => {
                 parsujM3U(text);
                 status(`✅ PlayBoxTV - ${kanaly.length} kanałów`);
                 document.getElementById('channelCount').textContent = kanaly.length;
             })
-            .catch(err => status(`❌ Błąd: ${err.message}`));
+            .catch(err => {
+                console.error('Błąd pobierania:', err);
+                status(`❌ Błąd: ${err.message}. Spróbuj inny link lub kliknij "Plik"`);
+            });
         }
 
         function pobierzZPliku() {
             const input = document.createElement('input');
             input.type = 'file';
-            input.accept = '.m3u,.m3u8';
+            input.accept = '.m3u,.m3u8,.txt';
             input.onchange = function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -356,7 +365,11 @@
                     nazwa = nazwa.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').trim();
                 } else if (line && !line.startsWith('#') && (line.startsWith('http://') || line.startsWith('https://'))) {
                     link = line;
-                    if (nazwa && link) { kanaly.push({ nazwa, link }); nazwa = ''; link = ''; }
+                    if (nazwa && link) { 
+                        kanaly.push({ nazwa, link }); 
+                        nazwa = ''; 
+                        link = ''; 
+                    }
                 }
             }
             if (nazwa && link) kanaly.push({ nazwa, link });
@@ -366,6 +379,10 @@
         function wyswietlKanaly() {
             const container = document.getElementById('channelList');
             container.innerHTML = '';
+            if (kanaly.length === 0) {
+                container.innerHTML = '<div style="padding:20px;text-align:center;color:#666;">Brak kanałów. Sprawdź link lub wczytaj plik.</div>';
+                return;
+            }
             kanaly.forEach((kanal, index) => {
                 const div = document.createElement('div');
                 div.className = 'channel-item';
